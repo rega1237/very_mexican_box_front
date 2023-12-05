@@ -6,10 +6,3 @@
   box-sizing: border-box;
   font-family: Montserrat, sans-serif;
 }
-
-.pink_rectangle{
-  background-color: #ea5376; 
-  height:100px; 
-  width:100%;
-  z-index: -1;
-}
