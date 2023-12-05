@@ -1,0 +1,52 @@
+.pink_rectangle{
+  background-color: #ea5376; 
+  height:100px; 
+  width:100%;
+  z-index: -1;
+}
+
+.black_rectangle{
+  background-color: black; 
+  height:100px; 
+  width:100%;
+  z-index: -1;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(30%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out;
+}
+
+.wrapper{
+  width: 100%;
+  display: flex;
+  animation: slide 16s infinite;
+}
+
+@keyframes slide{
+  0%{
+      transform: translateX(10%);
+  }
+  25%{
+      transform: translateX(-70%);
+  }
+  50%{
+      transform: translateX(-150%);
+  }
+  75%{
+      transform: translateX(-70%);
+  }
+  100%{
+      transform: translateX(10%);
+  }
+}
