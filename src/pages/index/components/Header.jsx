@@ -1,5 +1,4 @@
 import logo from '../../../assets/images/logo.png'
-import header from '../../../assets/images/header_index.png'
 const Header = () => {
   return (
     <section className="flex bg-header_index bg-cover min-h-[145px] md:min-h-[500px]">
