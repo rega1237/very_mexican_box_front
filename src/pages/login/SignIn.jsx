@@ -65,7 +65,7 @@ const SignIn = () => {
         className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr bg-pink i justify-around items-center hidden"
       >
       </div>
-      <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
+      <div className="flex h-screen md:w-1/2 justify-center py-10 items-center bg-white">
         <form className="bg-white" onSubmit={handleSubmit}>
           <h1 className="text-gray-800 font-bold text-2xl mb-1">Hola de nuevo!</h1>
           <p className="text-sm font-normal text-gray-600 mb-7">Inicio de Sesión</p>
