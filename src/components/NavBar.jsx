@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import logo from '../assets/images/thumbnail_logo.png'
 
 const NavBar = ({removeNavBar, addNavBar}) => {
@@ -89,6 +90,11 @@ const NavBar = ({removeNavBar, addNavBar}) => {
 	</div>
 </div>
   )
+}
+
+NavBar.propTypes = {
+	removeNavBar: PropTypes.func.isRequired,
+	addNavBar: PropTypes.func.isRequired
 }
 
 export default NavBar
