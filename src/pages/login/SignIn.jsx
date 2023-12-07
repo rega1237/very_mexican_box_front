@@ -1,18 +1,41 @@
 import { useRef } from 'react';
+import x_icon from '../../assets/images/x_white.png';
+import check_mark from '../../assets/images/check_green.png'
 
 const SignIn = () => {
   const url = 'http://localhost:3000/auth/sign_in';
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const loginBtn = useRef(null);
+  const errorSpan = useRef(null);
 
   const successLogin = () => {
-    loginBtn.current.innerHTML = `<img width="30" height="30" src="https://img.icons8.com/emoji/48/check-mark-emoji.png" alt="check-mark-emoji"/>`;
+    loginBtn.current.innerHTML = `<img width="30" height="30" src=${check_mark} alt="check-mark-emoji" alt=""/>`;
     setTimeout(() => {
       loginBtn.current.innerHTML = `Iniciar Sesión`;
-    }, 1000);
+    }, 2000);
   }
 
+  const errorLogin = (response) => {
+    if (response.status === 401) {
+      errorSpan.current.innerHTML = `<p class="text-red-500 text-center text-sm font-bold">Credenciales Incorrectas</p>`;
+    } else if (response.status === 404) {
+      errorSpan.current.innerHTML = `<p class="text-red-500 text-sm font-bold">Usuario no Existe</p>`;
+    } else if (response.status === 500) {
+      errorSpan.current.innerHTML = `<p class="text-red-500 text-sm font-bold">Server error intenta de nuevo</p>`;
+    } else if (!response.ok) {
+      errorSpan.current.innerHTML = `<p class="text-red-500 text-sm font-bold">oops! Algo salio mal!</p>`;
+    }
+
+    loginBtn.current.innerHTML = `<img width="30" height="30" src=${x_icon} alt="check-mark-emoji" alt=""/>`;
+    setTimeout(() => {
+      loginBtn.current.innerHTML = `Iniciar Sesión`;
+      errorSpan.current.innerHTML = '';
+    }, 2000);
+
+    throw new Error(response.status);
+  }
+  
   const resetForm = () => {
     emailRef.current.value = '';
     passwordRef.current.value = '';
@@ -28,12 +51,14 @@ const SignIn = () => {
       },
       body: JSON.stringify({ email, password }),
     }).then((response) => {
-      if (response.ok) {
-        localStorage.setItem('access-token', response.headers.get('access-token'));
-        localStorage.setItem('client', response.headers.get('client'));
-        localStorage.setItem('uid', response.headers.get('uid'));
-        return response.json();
+      if(response.ok) {
+      localStorage.setItem('access-token', response.headers.get('access-token'));
+      localStorage.setItem('client', response.headers.get('client'));
+      localStorage.setItem('uid', response.headers.get('uid'));
+      return response.json();
       }
+
+      errorLogin(response)
     }).then((data) => {
       console.log(data.data.id);
       console.log(data.data.name);
@@ -69,6 +94,7 @@ const SignIn = () => {
         <form className="bg-white" onSubmit={handleSubmit}>
           <h1 className="text-gray-800 font-bold text-2xl mb-1">Hola de nuevo!</h1>
           <p className="text-sm font-normal text-gray-600 mb-7">Inicio de Sesión</p>
+          <span id='error' ref={errorSpan}></span>
           <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
