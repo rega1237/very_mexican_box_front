@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import PropTypes from 'prop-types';
 import x_icon from '../../assets/images/x_white.png';
 import check_mark from '../../assets/images/check_green.png'
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -106,10 +107,10 @@ const SignUp = ({addNavBar}) => {
           <p className="text-sm font-normal text-gray-600 mb-7">Registro nuevo usuario</p>
           <span id='error' ref={errorSpan}></span>
           <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
-				    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-					    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-				    </svg>
-				    <input ref={fullNameRef} className="pl-2 outline-none border-none" type="text" name="" id="" placeholder="Nombre Completo" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+            </svg>
+            <input ref={fullNameRef} className="pl-2 outline-none border-none" type="text" name="" id="" placeholder="Nombre Completo" />
           </div>
           <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
             <svg
@@ -197,6 +198,11 @@ const SignUp = ({addNavBar}) => {
       </div>
     </div>
   );
+}
+
+SignUp.propTypes = {
+	removeNavBar: PropTypes.func.isRequired,
+	addNavBar: PropTypes.func.isRequired
 }
 
 export default SignUp;

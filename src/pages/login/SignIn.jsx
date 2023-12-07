@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import x_icon from '../../assets/images/x_white.png';
 import check_mark from '../../assets/images/check_green.png'
 
@@ -165,6 +166,11 @@ const SignIn = ({addNavBar}) => {
       </div>
     </div>
   );
+}
+
+SignIn.propTypes = {
+	removeNavBar: PropTypes.func.isRequired,
+	addNavBar: PropTypes.func.isRequired
 }
 
 export default SignIn;
