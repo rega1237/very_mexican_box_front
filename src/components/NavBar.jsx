@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import logo from '../assets/images/thumbnail_logo.png'
 
-const NavBar = () => {
+const NavBar = ({removeNavBar, addNavBar}) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const handleToggleOpen = () => {
@@ -23,7 +25,7 @@ const NavBar = () => {
 			</button>
 		</div>
 		<ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:flex lg:items-center lg:w-auto lg:space-x-6">
-			<li><a className="text-sm text-gray-400 hover:text-pink" href="#">Inicio</a></li>
+			<li><NavLink to="/" onClick={addNavBar} className="text-sm text-gray-400 hover:text-pink" href="#">Inicio</NavLink></li>
 			<li className="text-gray-300">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" className="w-4 h-4 current-fill" viewBox="0 0 24 24">
 					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
@@ -43,8 +45,8 @@ const NavBar = () => {
 			</li>
 			<li><a className="text-sm text-gray-400 hover:text-pink" href="#">Contacto</a></li>
 		</ul>
-		<a className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-pink hover:text-white text-sm text-gray-900 font-bold  rounded-xl transition duration-200" href="#">Iniciar Sesión</a>
-		<a className="hidden lg:inline-block py-2 px-6 bg-pink hover:bg-white hover:text-pink text-sm text-white font-bold rounded-xl transition duration-200" href="#">Registrarme</a>
+		<NavLink to="/signin" onClick={removeNavBar} className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-pink hover:text-white text-sm text-gray-900 font-bold  rounded-xl transition duration-200" href="#">Iniciar Sesión</NavLink>
+		<NavLink to="/signup" onClick={removeNavBar} className="hidden lg:inline-block py-2 px-6 bg-pink hover:bg-white hover:text-pink text-sm text-white font-bold rounded-xl transition duration-200" href="#">Registrarme</NavLink>
 	</nav>
 	<div className={`navbar-menu relative z-50 ${isOpen ? "" : "hidden"}`}>
 		<div className="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25" onClick={handleToggleOpen}></div>
@@ -62,7 +64,7 @@ const NavBar = () => {
 			<div>
 				<ul id="mobile-links">
 					<li className="mb-1">
-						<a className="active block p-4 text-sm font-semibold text-gray-400 hover:bg-pink hover:text-white rounded" href="#">INICIO</a>
+						<NavLink to="/" onClick={addNavBar} className="active block p-4 text-sm font-semibold text-gray-400 hover:bg-pink hover:text-white rounded" href="#">INICIO</NavLink>
 					</li>
 					<li className="mb-1">
 						<a className="block p-4 text-sm font-semibold text-gray-400 hover:bg-pink hover:text-white rounded" href="#">SOBRE NOSOTROS</a>
@@ -77,8 +79,8 @@ const NavBar = () => {
 			</div>
 			<div className="mt-auto">
 				<div className="pt-6">
-					<a className="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold leading-none text-pink bg-gray-50 hover:bg-gray-100 rounded-xl" href="#">INICIAR SESIÓN</a>
-					<a className="block px-4 py-3 mb-2 leading-loose text-xs text-center text-white font-semibold bg-pink hover:bg-blue-700  rounded-xl" href="#">REGISTRARME</a>
+					<NavLink to="/signin" onClick={removeNavBar} className="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold leading-none text-pink bg-gray-50 hover:bg-gray-100 rounded-xl" href="#">INICIAR SESIÓN</NavLink>
+					<NavLink to="/signup" onClick={removeNavBar} className="block px-4 py-3 mb-2 leading-loose text-xs text-center text-white font-semibold bg-pink hover:bg-blue-700  rounded-xl" href="#">REGISTRARME</NavLink>
 				</div>
 				<p className="my-4 text-xs text-center text-gray-400">
 					<span>Copyright © 2023</span>
@@ -88,6 +90,11 @@ const NavBar = () => {
 	</div>
 </div>
   )
+}
+
+NavBar.propTypes = {
+	removeNavBar: PropTypes.func.isRequired,
+	addNavBar: PropTypes.func.isRequired
 }
 
 export default NavBar
