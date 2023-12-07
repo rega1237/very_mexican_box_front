@@ -1,8 +1,11 @@
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import x_icon from '../../assets/images/x_white.png';
 import check_mark from '../../assets/images/check_green.png'
 
-const SignIn = () => {
+const SignIn = ({addNavBar}) => {
+  const navigateTo = useNavigate();
+
   const url = 'http://localhost:3000/auth/sign_in';
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -11,9 +14,15 @@ const SignIn = () => {
 
   const successLogin = () => {
     loginBtn.current.innerHTML = `<img width="30" height="30" src=${check_mark} alt="check-mark-emoji" alt=""/>`;
+    
     setTimeout(() => {
       loginBtn.current.innerHTML = `Iniciar Sesión`;
-    }, 2000);
+    }, 1500);
+
+    setTimeout(() => {
+      addNavBar();
+      navigateTo('/');
+    }, 2000)
   }
 
   const errorLogin = (response) => {
@@ -66,7 +75,7 @@ const SignIn = () => {
       successLogin();
       
     }).catch((error) => {
-      console.log(error);
+      console.error(error);
     });
   }
 
@@ -87,7 +96,7 @@ const SignIn = () => {
   return (
     <div className="h-screen md:flex">
       <div
-        className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr bg-pink i justify-around items-center hidden"
+        className="relative overflow-hidden md:flex w-1/2 bg-pink hidden"
       >
       </div>
       <div className="flex h-screen md:w-1/2 justify-center py-10 items-center bg-white">
