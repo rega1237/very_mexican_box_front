@@ -87,7 +87,7 @@ const UserProvider = (props) => {
         return response.json();
       })
       .then((data) => {
-        if(!data.success) {
+        if(data.success === false) {
           console.log(data.errors[0])
           return Promise.reject(new Error(data.errors[0]));
         }
@@ -148,7 +148,7 @@ const UserProvider = (props) => {
         return response.json()
       })
       .then((data) => {
-        if(data.status == 'error') {
+        if(data.status === 'error') {
           console.log(data.errors.full_messages[0])
           return Promise.reject(new Error(data.errors.full_messages[0]));
         }
