@@ -1,7 +1,7 @@
 import UserContext from "./userContext.js";
 import { useReducer } from "react";
 
-const url = "http://localhost:3000/auth";
+const url = "http://localhost:3000";
 
 const defaultUserState = {
   id: '',
@@ -16,6 +16,16 @@ const defaultUserState = {
 
 const userReducer = (state, action) => {
   switch (action.type) {
+    case "GET_USER":
+      return {
+        ...state,
+        id: action.id,
+        name: action.name,
+        email: action.email,
+        stripe_id: action.stripe_id,
+        isLogged: action.isLogged,
+        error: action.error,
+      }
     case "SIGN_IN":
       return {
         ...state,
@@ -63,8 +73,57 @@ const UserProvider = (props) => {
     defaultUserState
   );
 
+  const getUserHandler = (id) => {
+    fetch(`${url}/users/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid"),
+      },
+    })
+      .then((response) => {
+        if(localStorage.getItem("access-token") != "") {
+          localStorage.setItem("access-token", response.headers.get("access-token"));
+        }
+        localStorage.setItem("client", response.headers.get("client"));
+        localStorage.setItem("uid", response.headers.get("uid"));
+        return response.json();
+      }). then((data) => {
+        if(data.errors) {
+          return Promise.reject(new Error(data.errors[0]));
+        }
+
+        return data
+      })
+      .then((data) => {
+        dispatchUserAction({
+          type: "GET_USER",
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          stripe_id: data.stripe_id,
+          isLogged: true,
+          error: false,
+          errorMessage: "",
+        });
+      })
+      .catch((error) => {
+        localStorage.clear();
+        localStorage.setItem("isLogged", false);
+        dispatchUserAction({
+          type: "ERROR",
+          isLogged: false,
+          error: true,
+          errorMessage: error.message,
+        });
+        console.error("Error:", error);
+      });
+  }
+
   const signInHandler = async (email, password) => {
-    fetch(`${url}/sign_in`, {
+    fetch(`${url}/auth/sign_in`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,12 +154,8 @@ const UserProvider = (props) => {
         return data
       })
       .then((data) => {
-        localStorage.setItem("id", data.data.id);
-        localStorage.setItem("name", data.data.name);
-        localStorage.setItem("email", data.data.email);
-        localStorage.setItem("stripe_id", data.data.stripe_id);
         localStorage.setItem("isLogged", true);
-
+        localStorage.setItem("id", data.data.id);
         dispatchUserAction({
           type: "SIGN_IN",
           id: data.data.id,
@@ -124,7 +179,7 @@ const UserProvider = (props) => {
   };
 
   const signUpHandler = (name, email, password, confirm_password) => {
-    fetch(`${url}`, {
+    fetch(`${url}/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -156,12 +211,8 @@ const UserProvider = (props) => {
         return data
       })
       .then((data) => {
-        localStorage.setItem("id", data.data.id);
-        localStorage.setItem("name", data.data.name);
-        localStorage.setItem("email", data.data.email);
-        localStorage.setItem("stripe_id", data.data.stripe_id);
         localStorage.setItem("isLogged", true);
-
+        localStorage.setItem("id", data.data.id);
         dispatchUserAction({
           type: "SIGN_UP",
           id: data.data.id,
@@ -184,7 +235,7 @@ const UserProvider = (props) => {
   };
 
   const logOutHandler = () => {
-    fetch(`${url}/sign_out`, {
+    fetch(`${url}/auth/sign_out`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -222,6 +273,7 @@ const UserProvider = (props) => {
     signIn: signInHandler,
     signUp: signUpHandler,
     logOut: logOutHandler,
+    getUser: getUserHandler,
   };
 
   return (

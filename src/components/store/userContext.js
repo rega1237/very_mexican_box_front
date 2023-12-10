@@ -7,6 +7,7 @@ const UserContext = createContext({
   subcriptions: [],
   cards: [],
   isLogged: false,
+  getUser: (id) => {},
   signIn: (email, password) => {},
   signUp: (name, email, password, confirm_password) => {},
   signOut: () => {},
