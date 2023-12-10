@@ -20,7 +20,8 @@ const SignUp = ({addNavBar}) => {
   const errorSpan = useRef(null);
 
   useEffect(() => {
-    if (localStorage.getItem('isLogged')) {
+    const isLogged = localStorage.getItem('isLogged');
+    if (isLogged === 'true') {
       successRegister();
     } else if (userCtx.error) {
       errorRegister(userCtx.errorMessage);

@@ -17,7 +17,8 @@ const SignIn = ({addNavBar}) => {
   const errorSpan = useRef(null);
 
   useEffect(() => {
-    if (localStorage.getItem('isLogged')) {
+    const isLogged = localStorage.getItem('isLogged');
+    if (isLogged == 'true') {
       successLogin();
     } else if (userCtx.error) {
       errorLogin(userCtx.errorMessage);
