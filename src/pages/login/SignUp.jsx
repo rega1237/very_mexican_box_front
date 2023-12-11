@@ -1,13 +1,17 @@
-import { useRef } from 'react';
+import { useRef, useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import x_icon from '../../assets/images/x_white.png';
 import check_mark from '../../assets/images/check_green.png'
 import { NavLink, useNavigate } from 'react-router-dom';
+import UserContext from '../../components/store/userContext.js';
 
 const SignUp = ({addNavBar}) => {
+  const [fetching, setFetching] = useState(false);
+
   let navigateTo = useNavigate();
 
-  const url = 'http://localhost:3000/auth/';
+  const userCtx = useContext(UserContext);
+
   const fullNameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -15,37 +19,36 @@ const SignUp = ({addNavBar}) => {
   const loginBtn = useRef(null);
   const errorSpan = useRef(null);
 
+  useEffect(() => {
+    const isLogged = localStorage.getItem('isLogged');
+    if (isLogged === 'true') {
+      successRegister();
+    } else if (userCtx.error) {
+      errorRegister(userCtx.errorMessage);
+      userCtx.error = false;
+    }
+  }, [userCtx.error, userCtx.errorMessage, userCtx.isLogged, fetching]);
+
   const successRegister = () => {
     loginBtn.current.innerHTML = `<img width="30" height="30" src=${check_mark} alt="check-mark-emoji" alt=""/>`;
     
     setTimeout(() => {
-      loginBtn.current.innerHTML = `Iniciar Sesión`;
+      loginBtn.current.innerHTML = `Registrarme`;
     }, 1500);
-    
+
     setTimeout(() => {
       addNavBar();
       navigateTo('/');
-    }, 2000);
+    }, 2000)
   }
 
-  const errorRegister = (response) => {
-    if (response.status === 401) {
-      errorSpan.current.innerHTML = `<p class="text-red-500 text-center text-sm font-bold">Credenciales Incorrectas</p>`;
-    } else if (response.status === 404) {
-      errorSpan.current.innerHTML = `<p class="text-red-500 text-sm font-bold">Usuario no Existe</p>`;
-    } else if (response.status === 500) {
-      errorSpan.current.innerHTML = `<p class="text-red-500 text-sm font-bold">Server error intenta de nuevo</p>`;
-    } else if (!response.ok) {
-      errorSpan.current.innerHTML = `<p class="text-red-500 text-sm font-bold">oops! Algo salio mal!</p>`;
-    }
-
+  const errorRegister = (error) => {
+    errorSpan.current.innerHTML = `<p class="text-red-500 text-center text-sm font-bold">${error}</p>`;
     loginBtn.current.innerHTML = `<img width="30" height="30" src=${x_icon} alt="check-mark-emoji" alt=""/>`;
     setTimeout(() => {
-      loginBtn.current.innerHTML = `Iniciar Sesión`;
+      loginBtn.current.innerHTML = `Registrarme`;
       errorSpan.current.innerHTML = '';
-    }, 2000);
-
-    throw new Error(response.status);
+    }, 3000);
   }
   
   const resetForm = () => {
@@ -53,34 +56,6 @@ const SignUp = ({addNavBar}) => {
     emailRef.current.value = '';
     passwordRef.current.value = '';
     repeatPasswordRef.current.value = '';
-    console.log('Form reseted')
-  }
-
-  const sendCredentials = (name, email, password, password_confirmation) => {
-    // Send credentials to backend
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password, password_confirmation }),
-    }).then((response) => {
-      if(response.ok) {
-      localStorage.setItem('access-token', response.headers.get('access-token'));
-      localStorage.setItem('client', response.headers.get('client'));
-      localStorage.setItem('uid', response.headers.get('uid'));
-      return response.json();
-      }
-
-      errorRegister(response)
-    }).then((data) => {
-      console.log(data.data.id);
-      console.log(data.data.name);
-      console.log(data.data.email);
-      successRegister();
-    }).catch((error) => {
-      console.log(error);
-    });
   }
 
   const handleSubmit = (e) => {
@@ -94,8 +69,8 @@ const SignUp = ({addNavBar}) => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const repeatPassword = repeatPasswordRef.current.value;
-    console.log(fullName, email, password, repeatPassword)
-    sendCredentials(fullName, email, password, repeatPassword);
+    userCtx.signUp(fullName, email, password, repeatPassword)
+    setFetching(userCtx.isLogged)
     resetForm();
   }
 
@@ -201,7 +176,6 @@ const SignUp = ({addNavBar}) => {
 }
 
 SignUp.propTypes = {
-	removeNavBar: PropTypes.func.isRequired,
 	addNavBar: PropTypes.func.isRequired
 }
 
