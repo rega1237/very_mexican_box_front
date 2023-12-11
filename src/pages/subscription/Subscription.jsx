@@ -1,6 +1,14 @@
+import TitleSub from "./TittleSub";
+import AllCards from "./AllCards";
+
 const Subscription = () => {
   return (
-    <h1>hola</h1>
+    <section className="bg-black text-white pb-9">
+      <TitleSub />
+      <div>
+        <AllCards />
+      </div>
+    </section>
   )
 }
 

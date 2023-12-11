@@ -1,0 +1,25 @@
+.backdop_filter {
+  backdrop-filter: blur(21.04482650756836px);
+}
+
+.white_line{
+  background-color: white; 
+  height:1px; 
+  width:100%;
+  margin-top: 30px;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(30%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out;
+}
