@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 const SignBtnsMobile = ({removeNavBar}) => {
   return (
@@ -7,6 +8,10 @@ const SignBtnsMobile = ({removeNavBar}) => {
       <NavLink to="/signup" onClick={removeNavBar} className="block px-4 py-3 mb-2 leading-loose text-xs text-center text-white font-semibold bg-pink hover:bg-gray-50 hover:text-pink  rounded-xl" href="#">REGISTRARME</NavLink>
     </ >
   )
+}
+
+SignBtnsMobile.propTypes = {
+  removeNavBar: PropTypes.func.isRequired,
 }
 
 export default SignBtnsMobile;

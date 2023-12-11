@@ -1,5 +1,7 @@
 import { createContext } from "react";
 
+/* eslint  no-unused-vars: 0 */
+
 const UserContext = createContext({
   id: '',
   name: '',

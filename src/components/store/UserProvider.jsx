@@ -1,5 +1,6 @@
 import UserContext from "./userContext.js";
 import { useReducer } from "react";
+import PropTypes from 'prop-types';
 
 const url = "http://localhost:3000";
 
@@ -254,6 +255,8 @@ const UserProvider = (props) => {
           uid: '',
           isLogged: false,
         });
+
+        return response.json();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -282,5 +285,9 @@ const UserProvider = (props) => {
     </UserContext.Provider>
   );
 };
+
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+}
 
 export default UserProvider;
