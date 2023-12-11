@@ -44,7 +44,7 @@ const NavBar = ({removeNavBar, addNavBar}) => {
 					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
 				</svg>
 			</li>
-			<li><a className="text-sm text-gray-400 hover:text-pink" href="#">Subcripciones</a></li>
+			<li><NavLink to="/suscripciones" className="text-sm text-gray-400 hover:text-pink" href="#">Suscripciones</NavLink></li>
 			<li className="text-gray-300">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" className="w-4 h-4 current-fill" viewBox="0 0 24 24">
 					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
@@ -76,7 +76,7 @@ const NavBar = ({removeNavBar, addNavBar}) => {
 						<a className="block p-4 text-sm font-semibold text-gray-400 hover:bg-pink hover:text-white rounded" href="#">SOBRE NOSOTROS</a>
 					</li>
 					<li className="mb-1">
-						<a className="block p-4 text-sm font-semibold text-gray-400 hover:bg-pink hover:text-white rounded" href="#">SUBSCRIPCIONES</a>
+						<NavLink to="/suscripciones" className="block p-4 text-sm font-semibold text-gray-400 hover:bg-pink hover:text-white rounded" href="#">SUSCRIPCIONES</NavLink>
 					</li>
 					<li className="mb-1">
 						<a className="block p-4 text-sm font-semibold text-gray-400 hover:bg-pink hover:text-white rounded" href="#">CONTACTO</a>
