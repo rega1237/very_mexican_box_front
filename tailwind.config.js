@@ -11,7 +11,8 @@ export default {
         subs_cta_bg: "url('/src/assets/images/background_cta_subscribe.png')",
       },
       colors: {
-        pink: "#ea5376"
+        pink: "#ea5376",
+        backgroundCard: "rgba(72, 72, 72, 0.36)"
       },
       fontFamily: {
         montse: ["Montserrat", "sans-serif"]
