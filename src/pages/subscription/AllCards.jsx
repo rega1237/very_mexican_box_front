@@ -13,7 +13,7 @@ const AllCards = () => {
   ]
 
   return(
-    <div className="flex justify-center gap-5 animate-slide-up">
+    <div className="flex flex-col items-center lg:flex-row lg:justify-center gap-5 animate-slide-up">
       {
         cards.map((card, index) => (
           <CardSubscription title={card.title} price={card.price} key={index} />
