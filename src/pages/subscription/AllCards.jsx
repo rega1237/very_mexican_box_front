@@ -1,6 +1,6 @@
 import CardSubscription from "./CardSubscription";
 
-const AllCards = () => {
+const AllCards = ({handleModal}) => {
   const cards = [
     {
       title: "Suscripción Mensual",
@@ -16,7 +16,7 @@ const AllCards = () => {
     <div className="flex flex-col items-center lg:flex-row lg:justify-center gap-5 animate-slide-up">
       {
         cards.map((card, index) => (
-          <CardSubscription title={card.title} price={card.price} key={index} />
+          <CardSubscription handleModal={handleModal} title={card.title} price={card.price} key={index} />
         ))
       }
     </ div>

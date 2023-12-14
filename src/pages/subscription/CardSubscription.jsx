@@ -1,6 +1,6 @@
 import "./Subscription.css"
 import logo from "../../assets/images/thumbnail_logo.png"
-const CardSubscription = ({title, price}) => {
+const CardSubscription = ({handleModal, title, price}) => {
   return (
     <div className="backdrop_filter flex flex-col bg-backgroundCard w-[359px] mt-[50px] py-[30px] justify-center items-start">
       <div className="w-[80%] mx-auto">
@@ -24,7 +24,7 @@ const CardSubscription = ({title, price}) => {
         </div>
 
         <div className="mt-[30px]">
-          <button className="bg-pink w-full py-[10px] rounded-2xl font-semibold hover:bg-white hover:text-pink">SUSCRIBIRME</button>
+          <button onClick={handleModal} className="bg-pink w-full py-[10px] rounded-2xl font-semibold hover:bg-white hover:text-pink">SUSCRIBIRME</button>
         </div>
       </div>
 
