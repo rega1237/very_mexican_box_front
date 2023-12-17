@@ -1,11 +1,11 @@
 import Header from './CardFormComponents/Header';
 import Inputs from './CardFormComponents/Inputs';
 
-const CardForm = ({ handlePrevStep, cardName, cardNumber, cardExpMonth, cardExpYear, cardCvc, setCardName, setCardNumber, setCardExpMonth, setCardExpYear, setCardCvc }) => {
+const CardForm = ({ handlePrevStep, handleNextStep, isCatrina, cardName, setCardName, name, adressLineOne, adressLineTwo, state, city, zipCode, handleFetch, plan }) => {
   return (
     <>
-      <Header cardName={cardName} cardNumber={cardNumber} cardExpMonth={cardExpMonth} cardExpYear={cardExpYear} cardCvc={cardCvc} />
-      <Inputs handlePrevStep={handlePrevStep} cardName={cardName} cardNumber={cardNumber} cardExpMonth={cardExpMonth} cardExpYear={cardExpYear} cardCvc={cardCvc} setCardName={setCardName} setCardNumber={setCardNumber} setCardExpMonth={setCardExpMonth} setCardExpYear={setCardExpYear} setCardCvc={setCardCvc} />
+      <Header />
+      <Inputs handlePrevStep={handlePrevStep} handleNextStep={handleNextStep} isCatrina={isCatrina} cardName={cardName} setCardName={setCardName} name={name} adressLineOne={adressLineOne} adressLineTwo={adressLineTwo} state={state} city={city} zipCode={zipCode} handleFetch={handleFetch} plan={plan} />
     </>
   )
 }
