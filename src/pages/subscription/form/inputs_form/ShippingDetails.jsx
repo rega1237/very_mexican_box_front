@@ -7,7 +7,7 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
             type="text"
             name="name"
             id="name"
-            className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+            className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Introduce tu nombre completo"
@@ -20,7 +20,7 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
             type="text"
             name="adress_line_1"
             id="adress_line_1"
-            className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+            className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
             value={adressLineOne}
             onChange={(e) => setAdressLineOne(e.target.value)}
             placeholder="(e.g., street, PO Box, or company name)"
@@ -33,7 +33,7 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
             type="text"
             name="adress_line_2"
             id="adress_line_2"
-            className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+            className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
             value={adressLineTwo}
             onChange={(e) => setAdressLineTwo(e.target.value)}
             placeholder="(e.g., apartment, suite, unit, or building)"
@@ -46,7 +46,7 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
             type="text"
             name="state"
             id="state"
-            className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+            className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
             value={state}
             onChange={(e) => setState(e.target.value)}
             placeholder="Introduce el estado"
@@ -59,7 +59,7 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
             type="text"
             name="city"
             id="city"
-            className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+            className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
             value={city}
             onChange={(e) => setCity(e.target.value)}
             placeholder="Introduce la ciudad"
@@ -72,7 +72,7 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
               type="number"
               name="zip_code"
               id="zip_code"
-              className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+              className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
               value={zipCode}
               onChange={(e) => setZipCode(e.target.value)}
               placeholder="Zipcode"
