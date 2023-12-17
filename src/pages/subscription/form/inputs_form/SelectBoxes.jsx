@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import boxFrida from '../../../../assets/images/box_frida_1.png'
 import boxCatrina from '../../../../assets/images/box_catrina_1.png'
 
@@ -31,6 +32,14 @@ const SelectBoxes = ({isFrida, isCatrina, handleCatrina, handleFrida, handleNext
       </div>
     </>
   )
+}
+
+SelectBoxes.propTypes = {
+  isFrida: PropTypes.bool.isRequired,
+  isCatrina: PropTypes.bool.isRequired,
+  handleCatrina: PropTypes.func.isRequired,
+  handleFrida: PropTypes.func.isRequired,
+  handleNextStep: PropTypes.func.isRequired,
 }
 
 export default SelectBoxes;

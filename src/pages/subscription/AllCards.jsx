@@ -1,4 +1,5 @@
 import CardSubscription from "./CardSubscription";
+import Proptypes from "prop-types";
 
 const AllCards = ({handleModalPlan}) => {
   const cards = [
@@ -21,6 +22,10 @@ const AllCards = ({handleModalPlan}) => {
       }
     </ div>
   )
+}
+
+AllCards.propTypes = {
+  handleModalPlan: Proptypes.func.isRequired
 }
 
 export default AllCards;

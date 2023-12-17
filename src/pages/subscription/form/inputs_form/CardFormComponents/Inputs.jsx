@@ -1,4 +1,5 @@
 import { useContext } from "react"
+import PropTypes from "prop-types"
 import { CardNumberElement, useStripe, useElements, CardExpiryElement, CardCvcElement } from "@stripe/react-stripe-js"
 import UserContext from '../../../../../components/store/userContext'
 
@@ -115,6 +116,22 @@ const Inputs = ({ handlePrevStep, handleNextStep, isCatrina, cardName, setCardNa
       </div>
     </form>
   )
+}
+
+Inputs.propTypes = {
+  handlePrevStep: PropTypes.func.isRequired,
+  handleNextStep: PropTypes.func.isRequired,
+  isCatrina: PropTypes.bool.isRequired,
+  cardName: PropTypes.string.isRequired,
+  setCardName: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  adressLineOne: PropTypes.string.isRequired,
+  adressLineTwo: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  zipCode: PropTypes.string.isRequired,
+  handleFetch: PropTypes.func.isRequired,
+  plan: PropTypes.number.isRequired
 }
 
 export default Inputs

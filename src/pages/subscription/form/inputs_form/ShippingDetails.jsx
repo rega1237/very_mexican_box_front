@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, adressLineTwo, state, city, zipCode, setName, setAdressLineOne, setAdressLineTwo, setState, setCity, setZipCode }) => {
   return (
     <>
@@ -91,6 +93,23 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
       </div>
     </>
   )
+}
+
+ShippingDetails.propTypes = {
+  handleNextStep: PropTypes.func.isRequired,
+  handlePrevStep: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  adressLineOne: PropTypes.string.isRequired,
+  adressLineTwo: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  zipCode: PropTypes.number.isRequired,
+  setName: PropTypes.func.isRequired,
+  setAdressLineOne: PropTypes.func.isRequired,
+  setAdressLineTwo: PropTypes.func.isRequired,
+  setState: PropTypes.func.isRequired,
+  setCity: PropTypes.func.isRequired,
+  setZipCode: PropTypes.func.isRequired
 }
 
 export default ShippingDetails;

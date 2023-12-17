@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
+import PropTypes from 'prop-types'
 import UserContext from '../../../components/store/userContext'
 
 const CompletedMessage = ({ resetStep }) => {
@@ -41,6 +42,10 @@ const CompletedMessage = ({ resetStep }) => {
     }
     </>
   )
+}
+
+CompletedMessage.propTypes = {
+  resetStep: PropTypes.func.isRequired
 }
 
 export default CompletedMessage

@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react'
+import PropTypes from 'prop-types'
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import UserContext from '../../../components/store/userContext'
@@ -101,6 +102,11 @@ const FormModal = ({handleModal, plan}) => {
       </div>
     </Elements>
   )
+}
+
+FormModal.propTypes = {
+  handleModal: PropTypes.func.isRequired,
+  plan: PropTypes.number.isRequired
 }
 
 export default FormModal

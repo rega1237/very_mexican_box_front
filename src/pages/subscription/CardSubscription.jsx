@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import "./Subscription.css"
 import logo from "../../assets/images/thumbnail_logo.png"
 const CardSubscription = ({handleModalPlan, title, price, id}) => {
@@ -27,11 +28,15 @@ const CardSubscription = ({handleModalPlan, title, price, id}) => {
           <button onClick={() => handleModalPlan(id)} className="bg-pink w-full py-[10px] rounded-2xl font-semibold hover:bg-white hover:text-pink">SUSCRIBIRME</button>
         </div>
       </div>
-
-
-      
     </div>
   );
+}
+
+CardSubscription.propTypes = {
+  handleModalPlan: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  id: PropTypes.number.isRequired
 }
 
 export default CardSubscription;

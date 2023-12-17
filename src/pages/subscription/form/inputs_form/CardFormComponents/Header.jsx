@@ -1,11 +1,4 @@
-import cardImg from '../../../../../assets/images/card_form.png'
-
-const Header = ({ cardNumber, cardName, cardExpMonth, cardExpYear }) => {
-
-  const formatCardNumber = (cardNumber) => {
-    return cardNumber.replace(/\s/g, "").replace(/(.{4})/g, "$1 ");
-  };
-
+const Header = () => {
   return (
     <header className="col-span-6 justify-center hidden md:block">
       <ul className="flex justify-center">
