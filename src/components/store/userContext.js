@@ -9,10 +9,14 @@ const UserContext = createContext({
   subcriptions: [],
   cards: [],
   isLogged: false,
+  error: false,
+  errorMessage: '',
   getUser: (id) => {},
   signIn: (email, password) => {},
   signUp: (name, email, password, confirm_password) => {},
   signOut: () => {},
+  newSubscription: (card_token, user_id, plan_id, shipping_name, shipping_city, shipping_line1, shipping_line2, shipping_postal_code, shipping_state, change_default) => {},
+  setError: (error, errorMessage) => {},
 });
 
 export default UserContext;
