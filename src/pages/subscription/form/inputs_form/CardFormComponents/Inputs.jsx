@@ -1,81 +1,105 @@
-const Inputs = ({ handlePrevStep, cardName, cardNumber, cardExpMonth, cardExpYear, cardCvc, setCardName, setCardNumber, setCardExpMonth, setCardExpYear, setCardCvc }) => {
+import { useContext } from "react"
+import { CardNumberElement, useStripe, useElements, CardExpiryElement, CardCvcElement } from "@stripe/react-stripe-js"
+import UserContext from '../../../../../components/store/userContext'
+
+const Inputs = ({ handlePrevStep, handleNextStep, isCatrina, cardName, setCardName, name, adressLineOne, adressLineTwo, state, city, zipCode, handleFetch, plan }) => {
+  const userCtx = useContext(UserContext);
+
+  const stripe = useStripe()
+  const elements = useElements()
+
+  const cardNumberOptions = {
+    placeholder: 'Ingrese el número de tarjeta',
+  };
+
+  const cardExpOptions = {
+    placeholder: 'MM/AA',
+  };
+
+  const cardCvcOptions = {
+    placeholder: 'CVC'
+  }
+
+  const generateToken = async () => {
+    console.log("generando token...")
+    if (!stripe || !elements) {
+      return Promise.reject(new Error('Stripe.js has not yet loaded'));
+    }
+
+    const cardNumberElement = elements.getElement(CardNumberElement);
+    return stripe.createToken(cardNumberElement, {
+      name: cardName
+    }).then(({ token }) => token).catch((error) => { console.log(error) });
+  };
+
+  const submit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const tokenPromise = generateToken();
+      const token = await tokenPromise;
+
+      const box = isCatrina ? 'Catrina' : 'Frida'
+  
+      await userCtx.newSubscription(token.id, userCtx.id, plan, box, name, city, adressLineOne, adressLineTwo, zipCode, state, true);
+  
+      await handleFetch();
+      await handleNextStep();
+    } catch (error) {
+      userCtx.setError(true, "Error al crear la suscripción trata de nuevo");
+      handleFetch();
+      handleNextStep();
+    }
+
+  };
+
   return (
-    <>
-      <div className="md:col-span-6">
-        <input
-          type="text"
-          name="cardNumber"
+    <form onSubmit={submit} className="md:col-span-6">
+      <div className=" mt-2 md:col-span-6">
+        <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">
+          Número de tarjeta
+        </label>
+        <CardNumberElement
           id="cardNumber"
-          maxLength="16"
-          value={cardNumber}
-          onChange={(e) => setCardNumber(e.target.value)}
-          className="block w-full px-5 py-2 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
-          placeholder="Introduce el número de tarjeta"
+          options={cardNumberOptions}
+          className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
         />
       </div>
 
-      <div className="md:col-span-6">
+      <div className="mt-2 md:col-span-6">
+        <label htmlFor="cardName" className="block text-sm font-medium text-gray-700">
+          Nombre del titular
+        </label>
         <input
           type="text"
           name="cardName"
           id="cardName"
           value={cardName}
           onChange={e => setCardName(e.target.value)}
-          className="block w-full px-5 py-2 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
+          className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
           placeholder="Introduce el nombre del titular"
         />
       </div>
 
-      <div className="md:col-span-2">
-        <select
-          name="mes"
-          id="mes"
-          className="form-select appearance-none block w-full px-5 py-2 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
-          value={cardExpMonth}
-          onChange={e => setCardExpMonth(e.target.value)}
-        >
-          <option value="" disabled className="text-gray-400">Mes expiración</option>
-          <option value="01">01</option>
-          <option value="02">02</option>
-          <option value="03">03</option>
-          <option value="04">04</option>
-          <option value="05">05</option>
-          <option value="06">06</option>
-          <option value="07">07</option>
-          <option value="08">08</option>
-          <option value="09">09</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-        </select>
+      <div className="mt-2 md:col-span-2">
+        <label htmlFor="cardExpiry" className="block text-sm font-medium text-gray-700">
+          Fecha de expiración
+        </label>
+        <CardExpiryElement
+          id="cardExpiry"
+          options={cardExpOptions}
+          className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
+        />
       </div>
 
-      <div className="md:col-span-2">
-        <select
-          name="año"
-          id="año"
-          className="form-select appearance-none block w-full px-5 py-2 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
-          value={cardExpYear}
-          onChange={e => setCardExpYear(e.target.value)}
-        >
-          <option value="" disabled className="text-gray-400">Año expiración</option>
-          {Array(30).fill().map((_, i) => {
-            const year = new Date().getFullYear() + i
-            return <option key={i} value={year}>{year}</option> 
-          })}
-        </select>
-      </div>
-
-      <div className="md:col-span-2">
-        <input
-          type="text"
-          name="cvc"
-          id="cvc"
-          className="form-select appearance-none block w-full px-5 py-2 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
-          value={cardCvc}
-          maxLength="3"
-          placeholder="Introduce el CVC"
-          onChange={e => setCardCvc(e.target.value)}
+      <div className="mt-2 md:col-span-2">
+        <label htmlFor="cardCvc" className="block text-sm font-medium text-gray-700">
+          CVC
+        </label>
+        <CardCvcElement
+          id="cardCvc"
+          options={cardCvcOptions}
+          className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
         />
       </div>
 
@@ -84,12 +108,12 @@ const Inputs = ({ handlePrevStep, cardName, cardNumber, cardExpMonth, cardExpYea
             <button onClick={handlePrevStep} className="bg-pink hover:bg-white text-white hover:text-pink font-bold py-3 px-5 rounded-lg">
               Atras
             </button>
-            <button id='submit' type="submit" className="bg-pink hover:bg-white text-white hover:text-pink font-bold py-3 px-5 rounded-lg">
-              Pagar
+            <button onClick={handleFetch} id='submit' type="submit" className="bg-pink hover:bg-white text-white hover:text-pink font-bold py-3 px-5 rounded-lg">
+              Realizar Pedido
             </button>
           </div>
       </div>
-    </>
+    </form>
   )
 }
 
