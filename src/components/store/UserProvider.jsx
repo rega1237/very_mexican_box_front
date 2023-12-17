@@ -63,6 +63,11 @@ const userReducer = (state, action) => {
         error: action.error,
         errorMessage: action.errorMessage,
       };
+    case "NEW SUBSCRIPTION":
+      return {
+        ...state,
+        subscriptions: [...state.subscriptions, action.subscription],
+      };
     default:
       return state;
   }
@@ -263,6 +268,63 @@ const UserProvider = (props) => {
       });
   };
 
+  const newSubscription = async (card_token, user_id, plan_id, box, shipping_name, shipping_city, shipping_line1, shipping_line2, shipping_postal_code, shipping_state, change_default) => {
+    const subFetch = await fetch(`${url}/subscriptions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid"),   
+      },
+      body: JSON.stringify({
+        data: {
+              card_token: card_token,
+              user_id: user_id,
+              plan_id: plan_id,
+              box: box,
+              shipping_city: shipping_city,
+              shipping_line1: shipping_line1,
+               shipping_line2: shipping_line2,
+              shipping_postal_code: shipping_postal_code,
+              shipping_state: shipping_state,
+              shipping_name: shipping_name,
+              change_default: change_default
+        }
+      })
+    })
+
+    const subFetchHeaders = subFetch.headers
+
+    localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
+    localStorage.setItem("client", subFetchHeaders.get("client"));
+    localStorage.setItem("uid", subFetchHeaders.get("uid"));
+
+    if(!subFetch.ok) {
+      console.log(subFetch.status)
+      return Promise.reject(new Error('Hubo un problema al crear la suscripción'));
+    }
+
+    const response = await subFetch.json()
+
+    dispatchUserAction({
+      type: "NEW SUBSCRIPTION",
+      subscription: response,
+    });
+
+    return response
+  }
+
+  const setError = (error, errorMessage) => {
+    dispatchUserAction({
+      type: "ERROR",
+      error: error,
+      errorMessage: errorMessage,
+      isLogged: true,
+    });
+  };
+
+
   const userContext = {
     id: userState.id,
     stripe_id: userState.stripe_id,
@@ -277,6 +339,8 @@ const UserProvider = (props) => {
     signUp: signUpHandler,
     logOut: logOutHandler,
     getUser: getUserHandler,
+    newSubscription: newSubscription,
+    setError: setError,
   };
 
   return (

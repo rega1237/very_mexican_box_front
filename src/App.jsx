@@ -6,6 +6,7 @@ import SignUp from './pages/login/SignUp'
 import Index from './pages/index/Index'
 import NavBar from './components/NavBar/NavBar'
 import UserContext from './components/store/userContext';
+import Subscription from './pages/subscription/Subscription';
 
 function App() {
   const userCtx = useContext(UserContext);
@@ -36,6 +37,7 @@ function App() {
           <Route path="/signin" element={<SignIn addNavBar={handleOutAuthView} />} />
           <Route path="/signup" element={<SignUp addNavBar={handleOutAuthView} />} />
           <Route path="/" element={<Index />} />
+          <Route path="/suscripciones" element={<Subscription />} />
         </Routes>
       </Router>
     </>
