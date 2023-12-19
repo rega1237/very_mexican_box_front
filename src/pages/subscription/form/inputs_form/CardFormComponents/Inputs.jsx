@@ -22,7 +22,6 @@ const Inputs = ({ handlePrevStep, handleNextStep, isCatrina, cardName, setCardNa
   }
 
   const generateToken = async () => {
-    console.log("generando token...")
     if (!stripe || !elements) {
       return Promise.reject(new Error('Stripe.js has not yet loaded'));
     }
@@ -47,7 +46,7 @@ const Inputs = ({ handlePrevStep, handleNextStep, isCatrina, cardName, setCardNa
       await handleFetch();
       await handleNextStep();
     } catch (error) {
-      userCtx.setError(true, "Error al crear la suscripción trata de nuevo");
+      userCtx.setError(true, "Error al crear la suscripción trata de nuevo", true);
       handleFetch();
       handleNextStep();
     }

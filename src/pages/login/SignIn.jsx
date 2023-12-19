@@ -51,7 +51,6 @@ const SignIn = ({addNavBar}) => {
   const resetForm = () => {
     emailRef.current.value = '';
     passwordRef.current.value = '';
-    console.log('Form reseted')
   }
 
 const handleSubmit = async (e) => {

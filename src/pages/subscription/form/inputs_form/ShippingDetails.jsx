@@ -71,7 +71,7 @@ const ShippingDetails = ({handleNextStep, handlePrevStep, name, adressLineOne, a
         <div className="md:col-span-1 mt-3">
           <label htmlFor="zip_code">Zip Code</label>
             <input
-              type="number"
+              type="text"
               name="zip_code"
               id="zip_code"
               className="block w-full mt-3 px-5 py-3 border rounded-lg bg-white shadow-lg placeholder-gray-400 text-gray-700 focus:ring focus:outline-none"
@@ -103,7 +103,7 @@ ShippingDetails.propTypes = {
   adressLineTwo: PropTypes.string.isRequired,
   state: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
-  zipCode: PropTypes.number.isRequired,
+  zipCode: PropTypes.string.isRequired,
   setName: PropTypes.func.isRequired,
   setAdressLineOne: PropTypes.func.isRequired,
   setAdressLineTwo: PropTypes.func.isRequired,

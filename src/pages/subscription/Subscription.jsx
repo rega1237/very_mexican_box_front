@@ -12,7 +12,7 @@ const Subscription = () => {
 
   const handleModal = () => {
     setModalIsOpen(!modalIsOpen)
-    userCtx.setError(false, "");
+    userCtx.setError(false, "", true);
   }
 
   const handleModalPlan = (id) => {
