@@ -78,7 +78,7 @@ const UserAccount = ({isUserFetched, handleFetching}) => {
         <div className="flex flex-col items-center justify-center">
           <h2 className="text-center font-bold text-white text-lg">Tus suscripciones</h2>
         </div>
-          <AllUserSubscriptions />
+          <AllUserSubscriptions handleFetching={handleFetching} />
         </>
       ) : (
         <div className="flex flex-col items-center justify-center">
