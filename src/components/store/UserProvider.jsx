@@ -309,38 +309,7 @@ const UserProvider = (props) => {
     return response
   }
 
-  const cancelSubscription = async (subscription_id, comment) => {
-    const subFetch = await fetch(`${url}/subscriptions/${subscription_id}/cancel_stripe_subscription`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token"),
-        "client": localStorage.getItem("client"),
-        "uid": localStorage.getItem("uid"),   
-      },
-      body: JSON.stringify({
-        data: {
-          active: false,
-          comment: comment,
-        }
-      })
-    })
-
-    const subFetchHeaders = subFetch.headers
-
-    if(!subFetch.ok) {
-      return Promise.reject(new Error('Hubo un problema al cancelar la suscripción'));
-    }
-
-    if(subFetchHeaders.get("access-token") != "") {
-      localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
-    }
-
-    localStorage.setItem("client", subFetchHeaders.get("client"));
-    localStorage.setItem("uid", subFetchHeaders.get("uid"));
-
-    const response = await subFetch.json()
-
+  const cancelSubscription = async (response) => {
     dispatchUserAction({
       type: "CANCEL SUBSCRIPTION",
       subscription: response,

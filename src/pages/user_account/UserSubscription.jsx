@@ -2,15 +2,50 @@ import { useContext, useState } from 'react';
 import UserContext from '../../components/store/userContext';
 import logo from '../../assets/images/thumbnail_logo.png'
 
-const UserSubscription = ({id, active, plan, box, name, city, state, zipCode, adressOne, adressTwo }) => {
+const UserSubscription = ({id, active, plan, box, name, city, state, zipCode, adressOne, adressTwo, handleFetching }) => {
   const userCtx = useContext(UserContext);
 
   const [isActive, setIsActive] = useState(active);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleCancelSubscription = async () => {
-    await userCtx.cancelSubscription(id, "no me gusta")
+  const handleCancelSubscription = async (id, comment) => {
+    const url = 'http://localhost:3000'
+    handleFetching()
+    const cancelFetch =  await fetch(`${url}/subscriptions/${id}/cancel_stripe_subscription`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid"),   
+      },
+      body: JSON.stringify({
+        data: {
+          active: false,
+          comment: comment,
+        }
+      })
+    })
+    
+    const cancelFetchHeaders = cancelFetch.headers
+
+    if(!cancelFetch.ok) {
+      return Promise.reject(new Error('Hubo un problema al cancelar la suscripción'));
+    }
+
+    if(cancelFetchHeaders.get("access-token") != "") {
+      localStorage.setItem("access-token", cancelFetchHeaders.get("access-token"));
+    }
+
+    localStorage.setItem("client", cancelFetchHeaders.get("client"));
+    localStorage.setItem("uid", cancelFetchHeaders.get("uid"));
+
+    const response = await cancelFetch.json()
+    
+    userCtx.cancelSubscription(response)
+
     setIsActive(false);
+    handleFetching()
   }
 
   const handleOpen = () => {
@@ -57,7 +92,7 @@ const UserSubscription = ({id, active, plan, box, name, city, state, zipCode, ad
             <p className="text-sm text-gray-500"><strong>Dirección 2:</strong> {adressTwo}</p>
           </li>
         </ul>
-        <button onClick={handleCancelSubscription} className={`${isActive ? "" : "hidden" } bg-pink p-2 text-sm text-white font-bold rounded mt-4 `}>Cancelar Suscripción</button>
+        <button onClick={() => handleCancelSubscription(id,"no me gustan")} className={`${isActive ? "" : "hidden" } bg-pink p-2 text-sm text-white font-bold rounded mt-4 `}>Cancelar Suscripción</button>
       </div>
     </div>
   )
