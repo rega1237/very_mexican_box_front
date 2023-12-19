@@ -10,7 +10,7 @@ const LoggedComponentDesktop = () => {
   }
 
   return (
-    <div className='flex gap-3 items-center hidden'>
+    <div className='lg:flex gap-3 items-center hidden'>
       <NavLink to="/useraccount" className="lg:block px-4 py-3 mb-2 leading-loose text-xs text-center text-white font-bold bg-pink hover:bg-gray-50 hover:text-pink  rounded-xl" href="#">Mi Cuenta</NavLink>
       <button onClick={logOutUser}>Cerrar Sesión</button>
     </div>
