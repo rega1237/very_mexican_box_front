@@ -68,6 +68,23 @@ const userReducer = (state, action) => {
         ...state,
         subscriptions: [...state.subscriptions, action.subscription],
       };
+    case "GET SUBSCRIPTIONS":
+      return {
+        ...state,
+        subscriptions: action.subscriptions,
+      };
+    case "CANCEL SUBSCRIPTION":
+      return {
+        ...state,
+        subscriptions: state.subscriptions.map((subscription) => {
+          if(subscription.id === action.subscription.id) {
+            subscription.active = false
+            return subscription
+          } else {
+            return subscription
+          }
+        })
+      }
     default:
       return state;
   }
@@ -90,7 +107,7 @@ const UserProvider = (props) => {
       },
     })
       .then((response) => {
-        if(localStorage.getItem("access-token") != "") {
+        if(response.headers.get("access-token") != "") {
           localStorage.setItem("access-token", response.headers.get("access-token"));
         }
         localStorage.setItem("client", response.headers.get("client"));
@@ -128,6 +145,48 @@ const UserProvider = (props) => {
       });
   }
 
+  const getUserSubscriptions = async (user_id) => {
+    const subFetch = await fetch(`${url}/users/${user_id}/subscriptions`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid"),   
+      }
+      })
+    
+    const subFetchHeaders = subFetch.headers
+    
+    if(!subFetch.ok) {
+      if(subFetch.status === 401) {
+        dispatchUserAction({
+          type: "ERROR",
+          isLogged: false,
+          error: true,
+          errorMessage: "Hubo un problema por favor vuelve a iniciar sesión",
+        });
+        return Promise.reject(new Error('401'));
+      }
+      return Promise.reject(new Error('Hubo un problema al cargar las suscripcines'));
+    }
+
+    if(subFetchHeaders.get("access-token") != "") {
+      localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
+    }
+    
+    localStorage.setItem("client", subFetchHeaders.get("client"));
+    localStorage.setItem("uid", subFetchHeaders.get("uid"));
+
+
+    const response = await subFetch.json()
+
+    dispatchUserAction({
+      type: "GET SUBSCRIPTIONS",
+      subscriptions: response,
+    });
+  }
+
   const signInHandler = async (email, password) => {
     fetch(`${url}/auth/sign_in`, {
       method: "POST",
@@ -144,7 +203,10 @@ const UserProvider = (props) => {
         const client = response.headers.get("client");
         const uid = response.headers.get("uid");
 
-        localStorage.setItem("access-token", accessToken);
+        if(accessToken != "") {
+          localStorage.setItem("access-token", response.headers.get("access-token"));
+        }
+
         localStorage.setItem("client", client);
         localStorage.setItem("uid", uid);
 
@@ -153,7 +215,6 @@ const UserProvider = (props) => {
       })
       .then((data) => {
         if(data.success === false) {
-          console.log(data.errors[0])
           return Promise.reject(new Error(data.errors[0]));
         }
 
@@ -198,11 +259,14 @@ const UserProvider = (props) => {
       }),
     })
       .then((response) => {
-        const accessToken = response.headers.get("access-token");
+        const access_token = response.headers.get("access-token");
         const client = response.headers.get("client");
         const uid = response.headers.get("uid");
 
-        localStorage.setItem("access-token", accessToken);
+        if(access_token != "") {
+          localStorage.setItem("access-token", response.headers.get("access-token"));
+        }
+
         localStorage.setItem("client", client);
         localStorage.setItem("uid", uid);
 
@@ -210,7 +274,6 @@ const UserProvider = (props) => {
       })
       .then((data) => {
         if(data.status === 'error') {
-          console.log(data.errors.full_messages[0])
           return Promise.reject(new Error(data.errors.full_messages[0]));
         }
 
@@ -285,7 +348,7 @@ const UserProvider = (props) => {
               box: box,
               shipping_city: shipping_city,
               shipping_line1: shipping_line1,
-               shipping_line2: shipping_line2,
+              shipping_line2: shipping_line2,
               shipping_postal_code: shipping_postal_code,
               shipping_state: shipping_state,
               shipping_name: shipping_name,
@@ -296,14 +359,16 @@ const UserProvider = (props) => {
 
     const subFetchHeaders = subFetch.headers
 
-    localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
-    localStorage.setItem("client", subFetchHeaders.get("client"));
-    localStorage.setItem("uid", subFetchHeaders.get("uid"));
-
     if(!subFetch.ok) {
-      console.log(subFetch.status)
       return Promise.reject(new Error('Hubo un problema al crear la suscripción'));
     }
+
+    if(subFetchHeaders.get("access-token") != "") {
+      localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
+    }
+
+    localStorage.setItem("client", subFetchHeaders.get("client"));
+    localStorage.setItem("uid", subFetchHeaders.get("uid"));
 
     const response = await subFetch.json()
 
@@ -315,12 +380,50 @@ const UserProvider = (props) => {
     return response
   }
 
-  const setError = (error, errorMessage) => {
+  const cancelSubscription = async (subscription_id, comment) => {
+    const subFetch = await fetch(`${url}/subscriptions/${subscription_id}/cancel_stripe_subscription`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid"),   
+      },
+      body: JSON.stringify({
+        data: {
+          active: false,
+          comment: comment,
+        }
+      })
+    })
+
+    const subFetchHeaders = subFetch.headers
+
+    if(!subFetch.ok) {
+      return Promise.reject(new Error('Hubo un problema al cancelar la suscripción'));
+    }
+
+    if(subFetchHeaders.get("access-token") != "") {
+      localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
+    }
+
+    localStorage.setItem("client", subFetchHeaders.get("client"));
+    localStorage.setItem("uid", subFetchHeaders.get("uid"));
+
+    const response = await subFetch.json()
+
+    dispatchUserAction({
+      type: "CANCEL SUBSCRIPTION",
+      subscription: response,
+    });
+  }
+
+  const setError = (error, errorMessage, isLogged) => {
     dispatchUserAction({
       type: "ERROR",
       error: error,
       errorMessage: errorMessage,
-      isLogged: true,
+      isLogged: isLogged,
     });
   };
 
@@ -340,6 +443,8 @@ const UserProvider = (props) => {
     logOut: logOutHandler,
     getUser: getUserHandler,
     newSubscription: newSubscription,
+    cancelSubscription: cancelSubscription,
+    getUserSubscriptions: getUserSubscriptions,
     setError: setError,
   };
 
