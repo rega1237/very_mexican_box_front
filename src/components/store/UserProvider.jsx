@@ -96,94 +96,23 @@ const UserProvider = (props) => {
     defaultUserState
   );
 
-  const getUserHandler = (id) => {
-    fetch(`${url}/users/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token"),
-        "client": localStorage.getItem("client"),
-        "uid": localStorage.getItem("uid"),
-      },
-    })
-      .then((response) => {
-        if(response.headers.get("access-token") != "") {
-          localStorage.setItem("access-token", response.headers.get("access-token"));
-        }
-        localStorage.setItem("client", response.headers.get("client"));
-        localStorage.setItem("uid", response.headers.get("uid"));
-        return response.json();
-      }). then((data) => {
-        if(data.errors) {
-          return Promise.reject(new Error(data.errors[0]));
-        }
-
-        return data
-      })
-      .then((data) => {
-        dispatchUserAction({
-          type: "GET_USER",
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          stripe_id: data.stripe_id,
-          isLogged: true,
-          error: false,
-          errorMessage: "",
-        });
-      })
-      .catch((error) => {
-        localStorage.clear();
-        localStorage.setItem("isLogged", false);
-        dispatchUserAction({
-          type: "ERROR",
-          isLogged: false,
-          error: true,
-          errorMessage: error.message,
-        });
-        console.error("Error:", error);
-      });
+  const getUserHandler = (id, name, email, stripe_id) => {
+    dispatchUserAction({
+      type: "GET_USER",
+      id: id,
+      name: name,
+      email: email,
+      stripe_id: stripe_id,
+      isLogged: true,
+      error: false,
+      errorMessage: "",
+    });
   }
 
-  const getUserSubscriptions = async (user_id) => {
-    const subFetch = await fetch(`${url}/users/${user_id}/subscriptions`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token"),
-        "client": localStorage.getItem("client"),
-        "uid": localStorage.getItem("uid"),   
-      }
-      })
-    
-    const subFetchHeaders = subFetch.headers
-    
-    if(!subFetch.ok) {
-      if(subFetch.status === 401) {
-        dispatchUserAction({
-          type: "ERROR",
-          isLogged: false,
-          error: true,
-          errorMessage: "Hubo un problema por favor vuelve a iniciar sesión",
-        });
-        return Promise.reject(new Error('401'));
-      }
-      return Promise.reject(new Error('Hubo un problema al cargar las suscripcines'));
-    }
-
-    if(subFetchHeaders.get("access-token") != "") {
-      localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
-    }
-    
-    localStorage.setItem("client", subFetchHeaders.get("client"));
-    localStorage.setItem("uid", subFetchHeaders.get("uid"));
-
-
-    const response = await subFetch.json()
-
+  const getUserSubscriptions = (subscriptions) => {
     dispatchUserAction({
       type: "GET SUBSCRIPTIONS",
-      subscriptions: response,
+      subscriptions: subscriptions,
     });
   }
 

@@ -3,33 +3,59 @@ import UserContext from "../../components/store/userContext"
 import AllUserSubscriptions from "./AllUserSubscriptions";
 import { useNavigate } from 'react-router-dom';
 
-const UserAccount = ({removeNavBar, isUserFetched}) => {
+const UserAccount = ({isUserFetched, handleFetching}) => {
   const userCtx = useContext(UserContext)
   const navigate = useNavigate()
 
-  const [isSubsLoaded, setIsSubsLoaded] = useState(false)
+  const fetchUserSubs = async (id) => {
+    const url = 'http://localhost:3000'
 
-  const fetchSubscriptions = async () => {
-    const id = localStorage.getItem('id')
-    try {
-      await userCtx.getUserSubscriptions(id)
-    }
-    catch(error){
-      if(error.message === 401){
-        localStorage.clear()
-        userCtx.setError(true, "Inicia sesión para continuar", false)
-        removeNavBar()
-        navigate('/signin')
-      } else {
-        userCtx.setError(true, "Error al cargar las suscripciones", true)
+    // Start spinner
+    handleFetching()
+
+    // Fetch user
+    const userSubsFetch = await fetch(`${url}/users/${id}/subscriptions`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid"),   
       }
+    })
+    
+    // Fetch response Headers
+    const userSubsFetchHeaders = userSubsFetch.headers
+    
+    // if userFetch is not ok, set error and stop spinner
+    if(!userSubsFetch.ok) {
+      userCtx.setError(true, "Error al cargar el usuario", false)
+      handleFetching()
     }
+  
+    // Set values in localStorage
+    if(userSubsFetchHeaders.get("access-token") != "") {
+      localStorage.setItem("access-token", userSubsFetchHeaders.get("access-token"));
+    }
+      
+    localStorage.setItem("client", userSubsFetchHeaders.get("client"));
+    localStorage.setItem("uid", userSubsFetchHeaders.get("uid"));
+    
+    // Parse response
+    const response = await userSubsFetch.json()
+
+    // Set user in context
+    console.log(response)
+    userCtx.getUserSubscriptions(response)
+
+    // Stop spinner
+    handleFetching()
   }
 
   useEffect(() => {
     try {
      if(isUserFetched || userCtx.isLogged){
-        fetchSubscriptions()
+        fetchUserSubs(userCtx.id)
         return
      } else if(!userCtx.isLogged){
         navigate('/')
