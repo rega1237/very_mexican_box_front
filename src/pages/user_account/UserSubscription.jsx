@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import UserContext from '../../components/store/userContext';
 import logo from '../../assets/images/thumbnail_logo.png'
 
@@ -96,6 +97,20 @@ const UserSubscription = ({id, active, plan, box, name, city, state, zipCode, ad
       </div>
     </div>
   )
+}
+
+UserSubscription.propTypes = {
+  id: PropTypes.number.isRequired,
+  active: PropTypes.bool.isRequired,
+  plan: PropTypes.number.isRequired,
+  box: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+  zipCode: PropTypes.string.isRequired,
+  adressOne: PropTypes.string.isRequired,
+  adressTwo: PropTypes.string.isRequired,
+  handleFetching: PropTypes.func.isRequired,
 }
 
 export default UserSubscription;

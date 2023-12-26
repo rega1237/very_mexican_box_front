@@ -1,5 +1,6 @@
 import {useContext} from 'react'
 import UserContext from '../../components/store/userContext'
+import PropTypes from 'prop-types'
 import UserSubscription from './UserSubscription'
 
 const AllUserSubscriptions = ({handleFetching}) => {
@@ -16,6 +17,10 @@ const AllUserSubscriptions = ({handleFetching}) => {
      }
    </ul>
   )
+}
+
+AllUserSubscriptions.propTypes = {
+  handleFetching: PropTypes.func.isRequired
 }
 
 export default AllUserSubscriptions
