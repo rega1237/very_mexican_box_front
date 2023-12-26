@@ -1,4 +1,5 @@
-import { useEffect, useContext, useState } from "react"
+import { useEffect, useContext } from "react"
+import PropTypes from "prop-types"
 import UserContext from "../../components/store/userContext"
 import AllUserSubscriptions from "./AllUserSubscriptions";
 import { useNavigate } from 'react-router-dom';
@@ -13,43 +14,57 @@ const UserAccount = ({isUserFetched, handleFetching}) => {
     // Start spinner
     handleFetching()
 
-    // Fetch user
-    const userSubsFetch = await fetch(`${url}/users/${id}/subscriptions`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token"),
-        "client": localStorage.getItem("client"),
-        "uid": localStorage.getItem("uid"),   
+    try {
+      // Fetch user
+      const userSubsFetch = await fetch(`${url}/users/${id}/subscriptions`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),   
+        }
+      })
+
+      // Fetch response Headers
+      const userSubsFetchHeaders = userSubsFetch.headers
+
+      // if userFetch is not ok, set error and stop spinner
+      if(!userSubsFetch.ok) {
+        if(userSubsFetch.status === 401) {
+          userCtx.setError(true, "Unauthorized", true)
+          handleFetching()
+          navigate('/signin')
+          return Promise.reject("Unauthorized")
+        }
+        userCtx.setError(true, "Error to load the user", false)
+        handleFetching()
+        return Promise.reject("Error to load the user")
       }
-    })
-    
-    // Fetch response Headers
-    const userSubsFetchHeaders = userSubsFetch.headers
-    
-    // if userFetch is not ok, set error and stop spinner
-    if(!userSubsFetch.ok) {
-      userCtx.setError(true, "Error al cargar el usuario", false)
+
+      // Set values in localStorage
+      if(userSubsFetchHeaders.get("access-token") != "") {
+        localStorage.setItem("access-token", userSubsFetchHeaders.get("access-token"));
+      }
+        
+      localStorage.setItem("client", userSubsFetchHeaders.get("client"));
+      localStorage.setItem("uid", userSubsFetchHeaders.get("uid"));
+
+      // Parse response
+      const response = await userSubsFetch.json()
+
+      // Set user in context
+      userCtx.getUserSubscriptions(response)
+
+      // Stop spinner
       handleFetching()
+    } catch (error) {
+      userCtx.setError(true, "Error to load the user", false)
+      handleFetching()
+      localStorage.clear()
+      navigate('/signin')
+      return Promise.reject("Error to load the user")
     }
-  
-    // Set values in localStorage
-    if(userSubsFetchHeaders.get("access-token") != "") {
-      localStorage.setItem("access-token", userSubsFetchHeaders.get("access-token"));
-    }
-      
-    localStorage.setItem("client", userSubsFetchHeaders.get("client"));
-    localStorage.setItem("uid", userSubsFetchHeaders.get("uid"));
-    
-    // Parse response
-    const response = await userSubsFetch.json()
-
-    // Set user in context
-    console.log(response)
-    userCtx.getUserSubscriptions(response)
-
-    // Stop spinner
-    handleFetching()
   }
 
   useEffect(() => {
@@ -63,7 +78,7 @@ const UserAccount = ({isUserFetched, handleFetching}) => {
      }
     }
     catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }, [isUserFetched])
 
@@ -87,6 +102,11 @@ const UserAccount = ({isUserFetched, handleFetching}) => {
       )}
     </div>
   )
+}
+
+UserAccount.propTypes = {
+  isUserFetched: PropTypes.bool.isRequired,
+  handleFetching: PropTypes.func.isRequired
 }
 
 export default UserAccount
