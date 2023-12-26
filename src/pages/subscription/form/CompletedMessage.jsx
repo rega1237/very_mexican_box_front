@@ -1,12 +1,13 @@
 import { useContext } from 'react'
 import PropTypes from 'prop-types'
 import UserContext from '../../../components/store/userContext'
+import { NavLink } from 'react-router-dom'
 
 const CompletedMessage = ({ resetStep }) => {
   const userCtx = useContext(UserContext)
 
   const setErrorToFalse = () => {
-    userCtx.setError(false, "");
+    userCtx.setError(false, "", true);
     resetStep();
   }
 
@@ -20,9 +21,9 @@ const CompletedMessage = ({ resetStep }) => {
         <p>En pocos días recibiras un correo con los datos del envio</p>
 
         <div className="inline-flex items-end gap-4 mt-5">
-            <button className="bg-pink hover:bg-white text-white hover:text-pink font-bold py-3 px-5 rounded-lg">
+            <NavLink to="/useraccount" className="bg-pink hover:bg-white text-white hover:text-pink font-bold py-3 px-5 rounded-lg">
               Mi Cuenta
-            </button>
+            </NavLink>
           </div>
       </div>
     }

@@ -1,5 +1,5 @@
 import { useRef, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import x_icon from '../../assets/images/x_white.png';
 import check_mark from '../../assets/images/check_green.png'
@@ -51,7 +51,6 @@ const SignIn = ({addNavBar}) => {
   const resetForm = () => {
     emailRef.current.value = '';
     passwordRef.current.value = '';
-    console.log('Form reseted')
   }
 
 const handleSubmit = async (e) => {
@@ -71,9 +70,13 @@ const handleSubmit = async (e) => {
 };
 
   return (
+    <>
+    <div className='fixed top-8 right-5'>
+      <NavLink to="/" onClick={addNavBar}>{`Volver a la pagina principal >`}</NavLink>
+    </div>
     <div className="h-screen md:flex">
       <div
-        className="relative overflow-hidden md:flex w-1/2 bg-pink hidden"
+        className="relative overflow-hidden md:flex w-1/2 bg-sign_in_bg bg-cover hidden"
       >
       </div>
       <div className="flex h-screen md:w-1/2 justify-center py-10 items-center bg-white">
@@ -143,6 +146,7 @@ const handleSubmit = async (e) => {
         </form>
       </div>
     </div>
+    </>
   );
 }
 

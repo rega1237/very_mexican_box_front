@@ -12,7 +12,7 @@ const Subscription = () => {
 
   const handleModal = () => {
     setModalIsOpen(!modalIsOpen)
-    userCtx.setError(false, "");
+    userCtx.setError(false, "", true);
   }
 
   const handleModalPlan = (id) => {
@@ -21,7 +21,7 @@ const Subscription = () => {
   }
   
   return (
-    <section className="bg-black text-white pb-9">
+    <section className="bg-subscription_bg bg-cover text-white pb-9">
       <Form modalIsOpen={modalIsOpen} handleModal={handleModal} plan={plan} />
       <TitleSub />
       <div>

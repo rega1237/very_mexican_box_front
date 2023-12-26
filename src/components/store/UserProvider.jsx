@@ -68,6 +68,23 @@ const userReducer = (state, action) => {
         ...state,
         subscriptions: [...state.subscriptions, action.subscription],
       };
+    case "GET SUBSCRIPTIONS":
+      return {
+        ...state,
+        subscriptions: action.subscriptions,
+      };
+    case "CANCEL SUBSCRIPTION":
+      return {
+        ...state,
+        subscriptions: state.subscriptions.map((subscription) => {
+          if(subscription.id === action.subscription.id) {
+            subscription.active = false
+            return subscription
+          } else {
+            return subscription
+          }
+        })
+      }
     default:
       return state;
   }
@@ -79,53 +96,24 @@ const UserProvider = (props) => {
     defaultUserState
   );
 
-  const getUserHandler = (id) => {
-    fetch(`${url}/users/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token"),
-        "client": localStorage.getItem("client"),
-        "uid": localStorage.getItem("uid"),
-      },
-    })
-      .then((response) => {
-        if(localStorage.getItem("access-token") != "") {
-          localStorage.setItem("access-token", response.headers.get("access-token"));
-        }
-        localStorage.setItem("client", response.headers.get("client"));
-        localStorage.setItem("uid", response.headers.get("uid"));
-        return response.json();
-      }). then((data) => {
-        if(data.errors) {
-          return Promise.reject(new Error(data.errors[0]));
-        }
+  const getUserHandler = (id, name, email, stripe_id) => {
+    dispatchUserAction({
+      type: "GET_USER",
+      id: id,
+      name: name,
+      email: email,
+      stripe_id: stripe_id,
+      isLogged: true,
+      error: false,
+      errorMessage: "",
+    });
+  }
 
-        return data
-      })
-      .then((data) => {
-        dispatchUserAction({
-          type: "GET_USER",
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          stripe_id: data.stripe_id,
-          isLogged: true,
-          error: false,
-          errorMessage: "",
-        });
-      })
-      .catch((error) => {
-        localStorage.clear();
-        localStorage.setItem("isLogged", false);
-        dispatchUserAction({
-          type: "ERROR",
-          isLogged: false,
-          error: true,
-          errorMessage: error.message,
-        });
-        console.error("Error:", error);
-      });
+  const getUserSubscriptions = (subscriptions) => {
+    dispatchUserAction({
+      type: "GET SUBSCRIPTIONS",
+      subscriptions: subscriptions,
+    });
   }
 
   const signInHandler = async (email, password) => {
@@ -144,7 +132,10 @@ const UserProvider = (props) => {
         const client = response.headers.get("client");
         const uid = response.headers.get("uid");
 
-        localStorage.setItem("access-token", accessToken);
+        if(accessToken != "") {
+          localStorage.setItem("access-token", response.headers.get("access-token"));
+        }
+
         localStorage.setItem("client", client);
         localStorage.setItem("uid", uid);
 
@@ -153,7 +144,6 @@ const UserProvider = (props) => {
       })
       .then((data) => {
         if(data.success === false) {
-          console.log(data.errors[0])
           return Promise.reject(new Error(data.errors[0]));
         }
 
@@ -198,11 +188,14 @@ const UserProvider = (props) => {
       }),
     })
       .then((response) => {
-        const accessToken = response.headers.get("access-token");
+        const access_token = response.headers.get("access-token");
         const client = response.headers.get("client");
         const uid = response.headers.get("uid");
 
-        localStorage.setItem("access-token", accessToken);
+        if(access_token != "") {
+          localStorage.setItem("access-token", response.headers.get("access-token"));
+        }
+
         localStorage.setItem("client", client);
         localStorage.setItem("uid", uid);
 
@@ -210,7 +203,6 @@ const UserProvider = (props) => {
       })
       .then((data) => {
         if(data.status === 'error') {
-          console.log(data.errors.full_messages[0])
           return Promise.reject(new Error(data.errors.full_messages[0]));
         }
 
@@ -285,7 +277,7 @@ const UserProvider = (props) => {
               box: box,
               shipping_city: shipping_city,
               shipping_line1: shipping_line1,
-               shipping_line2: shipping_line2,
+              shipping_line2: shipping_line2,
               shipping_postal_code: shipping_postal_code,
               shipping_state: shipping_state,
               shipping_name: shipping_name,
@@ -296,14 +288,16 @@ const UserProvider = (props) => {
 
     const subFetchHeaders = subFetch.headers
 
-    localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
-    localStorage.setItem("client", subFetchHeaders.get("client"));
-    localStorage.setItem("uid", subFetchHeaders.get("uid"));
-
     if(!subFetch.ok) {
-      console.log(subFetch.status)
       return Promise.reject(new Error('Hubo un problema al crear la suscripción'));
     }
+
+    if(subFetchHeaders.get("access-token") != "") {
+      localStorage.setItem("access-token", subFetchHeaders.get("access-token"));
+    }
+
+    localStorage.setItem("client", subFetchHeaders.get("client"));
+    localStorage.setItem("uid", subFetchHeaders.get("uid"));
 
     const response = await subFetch.json()
 
@@ -315,12 +309,19 @@ const UserProvider = (props) => {
     return response
   }
 
-  const setError = (error, errorMessage) => {
+  const cancelSubscription = async (response) => {
+    dispatchUserAction({
+      type: "CANCEL SUBSCRIPTION",
+      subscription: response,
+    });
+  }
+
+  const setError = (error, errorMessage, isLogged) => {
     dispatchUserAction({
       type: "ERROR",
       error: error,
       errorMessage: errorMessage,
-      isLogged: true,
+      isLogged: isLogged,
     });
   };
 
@@ -340,6 +341,8 @@ const UserProvider = (props) => {
     logOut: logOutHandler,
     getUser: getUserHandler,
     newSubscription: newSubscription,
+    cancelSubscription: cancelSubscription,
+    getUserSubscriptions: getUserSubscriptions,
     setError: setError,
   };
 

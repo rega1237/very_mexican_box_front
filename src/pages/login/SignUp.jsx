@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useContext } from 'react';
+import "./SignUp.css";
 import PropTypes from 'prop-types';
 import x_icon from '../../assets/images/x_white.png';
 import check_mark from '../../assets/images/check_green.png'
@@ -75,6 +76,10 @@ const SignUp = ({addNavBar}) => {
   }
 
   return (
+    <>
+    <div className='fixed top-8 left-4'>
+      <NavLink to="/" onClick={addNavBar}>{`< Volver a la pagina principal`}</NavLink>
+    </div>
     <div className="h-screen md:flex">
       <div className="flex h-screen md:w-1/2 justify-center py-10 items-center bg-white">
         <form className="bg-white" onSubmit={handleSubmit}>
@@ -168,10 +173,11 @@ const SignUp = ({addNavBar}) => {
         </form>
       </div>
       <div
-        className="relative overflow-hidden md:flex w-1/2 bg-black hidden"
+        className="relative overflow-hidden md:flex w-1/2 hidden bg-signup"
       >
       </div>
     </div>
+    </>
   );
 }
 

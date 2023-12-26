@@ -20,9 +20,9 @@ const NavBar = ({removeNavBar, addNavBar}) => {
   return (
     <div className="bg-white">
 	<nav className="relative px-4 py-4 flex justify-between items-center">
-		<a className="text-3xl font-bold leading-none" href="#">
+		<NavLink to="/" className="text-3xl font-bold leading-none">
       <img className='w-[40%]' src={logo} alt="" />
-		</a>
+		</NavLink>
 		<div className="lg:hidden">
 			<button className="navbar-burger flex items-center text-pink p-3" onClick={handleToggleOpen}>
 				<svg className="block h-4 w-4 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
