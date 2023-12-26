@@ -21,7 +21,7 @@ const Subscription = () => {
   }
   
   return (
-    <section className="bg-subscription_bg bg-contain text-white pb-9">
+    <section className="bg-subscription_bg bg-cover text-white pb-9">
       <Form modalIsOpen={modalIsOpen} handleModal={handleModal} plan={plan} />
       <TitleSub />
       <div>

@@ -5,7 +5,6 @@ import SignIn from './pages/login/SignIn'
 import SignUp from './pages/login/SignUp'
 import Index from './pages/index/Index'
 import NavBar from './components/NavBar/NavBar'
-import { useNavigate } from 'react-router-dom';
 import UserContext from './components/store/userContext';
 import Subscription from './pages/subscription/Subscription';
 import UserAccount from './pages/user_account/UserAccount';
